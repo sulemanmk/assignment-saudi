@@ -55,8 +55,8 @@ A comprehensive Spring Boot application for managing products, users, and orders
 
 ```bash
 # Clone the repository
-git clone https://github.com/sulemanmk/assignment-sa
-cd productmanagersping
+git clone https://github.com/sulemanmk/assignment-saudi.git
+cd assignment-saudi
 
 # Build the project
 mvn clean install
@@ -177,7 +177,7 @@ mvn test
 
 ## Postman Collection
 
-Import the Postman collection from `postman/SaudiProjectProduct_Manager_API.postman_collection.json` for ready-to-use API requests.
+Import the Postman collection from `postman/Saudi_Assignmnet_Product Manager API.postman_collection.json` for ready-to-use API requests.
 
 ##  Configuration
 
@@ -192,6 +192,5 @@ Import the Postman collection from `postman/SaudiProjectProduct_Manager_API.post
 ### Database Configuration
 
 - **Development**: H2 in-memory database
-- **Docker/Production**: PostgreSQL with persistent volume
 
 
