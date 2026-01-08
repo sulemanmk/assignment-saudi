@@ -1,0 +1,2690 @@
+{
+	"info": {
+		"_postman_id": "3be49822-5fc1-4170-a9fc-0498704fdac0",
+		"name": "Product Manager API",
+		"description": "REST API collection for Product Manager Spring Boot application.\n\nThis API manages products, users, and orders with dynamic discount computation based on user type and order amount.\n\n## Authentication\n\nMost endpoints require JWT authentication. Use the Login endpoint to get a token, then set it in the Authorization header as `Bearer` .\n\n## User Roles\n\n- **USER**: Can view products and place orders (no discount)\n    \n- **PREMIUM_USER**: Can view products and place orders (10% discount)\n    \n- **ADMIN**: Full CRUD on products, user management, order management\n    \n\n## Discount Rules\n\n- PREMIUM_USER: 10% off total order\n    \n- Orders > $500: Extra 5% discount for any user",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "8148756",
+		"_collection_link": "https://martian-shuttle-223466.postman.co/workspace/SaudiArab-Assignment~4389a221-0591-45be-9a23-3907b7b6f04b/collection/8148756-3be49822-5fc1-4170-a9fc-0498704fdac0?action=share&source=collection_link&creator=8148756"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 201) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"suleman\",\n  \"email\": \"suleman@test.com\",\n  \"password\": \"Password@2026!\",\n  \"firstName\": \"suleman\",\n  \"lastName\": \"kandagal\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user account. Returns JWT token on successful registration."
+					},
+					"response": [
+						{
+							"name": "Register User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"sulemanuser\",\n  \"email\": \"sulemanuser@test.com\",\n  \"password\": \"Password@2026!\",\n  \"firstName\": \"sulemanuser\",\n  \"lastName\": \"kandagal\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:13:57 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJzdWIiOiJzdWxlbWFudXNlciIsImlhdCI6MTc2Nzg0OTIzNywiZXhwIjoxNzY3OTM1NjM3fQ.yukkkLi2Yd5_u_V69SrEyZ7dcEL6iRUJHho28TcAB1L01RNb7SWhriqGNKINdDCTfAqpj6NNmVMobI337kkWwg\",\n    \"type\": \"Bearer\",\n    \"userId\": 7,\n    \"username\": \"sulemanuser\",\n    \"email\": \"sulemanuser@test.com\",\n    \"role\": \"USER\",\n    \"expiresIn\": 86400000\n}"
+						}
+					]
+				},
+				{
+					"name": "Register Premium User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"suleman_premium2\",\n  \"email\": \"suleman_premium2@test.com\",\n  \"password\": \"suleman@premium!\",\n  \"firstName\": \"sulemanpremium\",\n  \"lastName\": \"sulemanpremium\",\n  \"role\": \"PREMIUM_USER\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a premium user account with 10% discount privileges."
+					},
+					"response": [
+						{
+							"name": "Register Premium User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"suleman_premium2\",\n  \"email\": \"suleman_premium2@test.com\",\n  \"password\": \"suleman@premium!\",\n  \"firstName\": \"sulemanpremium\",\n  \"lastName\": \"sulemanpremium\",\n  \"role\": \"PREMIUM_USER\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 13:42:14 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9QUkVNSVVNX1VTRVIifV0sInN1YiI6InN1bGVtYW5fcHJlbWl1bTIiLCJpYXQiOjE3Njc4Nzk3MzQsImV4cCI6MTc2Nzk2NjEzNH0.DaqtGejk_F1WPHka-t7k2MIDcL7dq_ga9NAPjho55hokAatf4p9ocrK4ARqr9uvXm62FeiDqximsBdB0Gw1Qdg\",\n    \"type\": \"Bearer\",\n    \"userId\": 4,\n    \"username\": \"suleman_premium2\",\n    \"email\": \"suleman_premium2@test.com\",\n    \"role\": \"PREMIUM_USER\",\n    \"expiresIn\": 86400000\n}"
+						}
+					]
+				},
+				{
+					"name": "Register Admin User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"suleman_admin2\",\n  \"email\": \"suleman_admin2@test.com\",\n  \"password\": \"suleman@2026!\",\n  \"firstName\": \"suleman_admin\",\n  \"lastName\": \"suleman_admin\",\n  \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/register",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a premium user account with 10% discount privileges."
+					},
+					"response": [
+						{
+							"name": "Register Admin User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"suleman_admin2\",\n  \"email\": \"suleman_admin2@test.com\",\n  \"password\": \"suleman@2026!\",\n  \"firstName\": \"suleman_admin\",\n  \"lastName\": \"suleman_admin\",\n  \"role\": \"ADMIN\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/register",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 13:43:02 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwic3ViIjoic3VsZW1hbl9hZG1pbjIiLCJpYXQiOjE3Njc4Nzk3ODIsImV4cCI6MTc2Nzk2NjE4Mn0.GG1rjshO-xUlKsnzU-xcQr6vMG0RG-SgcoeT8lmP0--8WNGEDPUtvOr9nknxIRADiDw_Z9yttCACvQ9g3R9oEw\",\n    \"type\": \"Bearer\",\n    \"userId\": 5,\n    \"username\": \"suleman_admin2\",\n    \"email\": \"suleman_admin2@test.com\",\n    \"role\": \"ADMIN\",\n    \"expiresIn\": 86400000\n}"
+						}
+					]
+				},
+				{
+					"name": "Login as Admin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"    console.log('Token saved to collection variables');",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"suleman_admin\",\n  \"password\": \"suleman@2026!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Authenticate user and receive JWT token.\n\n**Default Users:**\n- admin / admin123 (ADMIN)\n- user / user123 (USER)\n- premium / premium123 (PREMIUM_USER)"
+					},
+					"response": [
+						{
+							"name": "Login as Admin",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"suleman_admin\",\n  \"password\": \"suleman@2026!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 13:39:38 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9BRE1JTiJ9XSwic3ViIjoic3VsZW1hbl9hZG1pbiIsImlhdCI6MTc2Nzg3OTU3OCwiZXhwIjoxNzY3OTY1OTc4fQ.T0PqZTO78nrwxsqbc8S_yWqZ52nIYBkScVFIsdmUXUTG0SCQJok0-yPDuu-cfQURxAqTyRyWSj_E9mV5VzZhGA\",\n    \"type\": \"Bearer\",\n    \"userId\": 1,\n    \"username\": \"suleman_admin\",\n    \"email\": \"suleman_admin@test.com\",\n    \"role\": \"ADMIN\",\n    \"expiresIn\": 86400000\n}"
+						}
+					]
+				},
+				{
+					"name": "Login as Regular User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"suleman\",\n  \"password\": \"Password@2026!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login as regular user (no discounts)"
+					},
+					"response": [
+						{
+							"name": "Login as Regular User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"suleman\",\n  \"password\": \"Password@2026!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 13:44:27 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9VU0VSIn1dLCJzdWIiOiJzdWxlbWFuIiwiaWF0IjoxNzY3ODc5ODY3LCJleHAiOjE3Njc5NjYyNjd9.-Ff8Xr7-0uPgfHI0vi7u0eNjMvIX_bz0hXIdqgevX0KrEyzu-f4-LG8G6_5VFpo9hcPux8FqSPcEv2FsRctQVQ\",\n    \"type\": \"Bearer\",\n    \"userId\": 2,\n    \"username\": \"suleman\",\n    \"email\": \"suleman@test.com\",\n    \"role\": \"USER\",\n    \"expiresIn\": 86400000\n}"
+						}
+					]
+				},
+				{
+					"name": "Login as Premium User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"if (pm.response.code === 200) {",
+									"    var jsonData = pm.response.json();",
+									"    pm.collectionVariables.set('token', jsonData.token);",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {},
+								"requests": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n \"username\": \"suleman_premium\",\n  \"password\": \"suleman@premium!\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth/login",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login as premium user (10% discount on orders)"
+					},
+					"response": [
+						{
+							"name": "Login as Premium User",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"username\": \"suleman_premium\",\n  \"password\": \"suleman@premium!\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/auth/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"auth",
+										"login"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "",
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 13:45:36 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"token\": \"eyJhbGciOiJIUzUxMiJ9.eyJhdXRob3JpdGllcyI6W3siYXV0aG9yaXR5IjoiUk9MRV9QUkVNSVVNX1VTRVIifV0sInN1YiI6InN1bGVtYW5fcHJlbWl1bSIsImlhdCI6MTc2Nzg3OTkzNiwiZXhwIjoxNzY3OTY2MzM2fQ.uAMs3JJYju_HpBzpJQzZKufu9IRZ4rrR_0gzb3Nat1NPVkdrfv_kfuOoQauRonobAHgxY9NWYqOELe8hxnie-Q\",\n    \"type\": \"Bearer\",\n    \"userId\": 3,\n    \"username\": \"suleman_premium\",\n    \"email\": \"sulemanpremium@test.com\",\n    \"role\": \"PREMIUM_USER\",\n    \"expiresIn\": 86400000\n}"
+						}
+					]
+				}
+			],
+			"description": "Authentication endpoints for user login and registration"
+		},
+		{
+			"name": "Products",
+			"item": [
+				{
+					"name": "Get All Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products?page=0&size=12&sortBy=id&sortDir=asc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0",
+									"description": "Page number (0-based)"
+								},
+								{
+									"key": "size",
+									"value": "12",
+									"description": "Page size"
+								},
+								{
+									"key": "sortBy",
+									"value": "id",
+									"description": "Sort field (id, name, price, quantity)"
+								},
+								{
+									"key": "sortDir",
+									"value": "asc",
+									"description": "Sort direction (asc, desc)"
+								}
+							]
+						},
+						"description": "Get paginated list of all products. Requires authentication."
+					},
+					"response": [
+						{
+							"name": "Get All Products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products?page=0&size=15&sortBy=id&sortDir=desc",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0",
+											"description": "Page number (0-based)"
+										},
+										{
+											"key": "size",
+											"value": "15",
+											"description": "Page size"
+										},
+										{
+											"key": "sortBy",
+											"value": "id",
+											"description": "Sort field (id, name, price, quantity)"
+										},
+										{
+											"key": "sortDir",
+											"value": "desc",
+											"description": "Sort direction (asc, desc)"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 Jan 2026 19:34:43 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 12,\n            \"name\": \"mobile-samsung\",\n            \"description\": \"samsung\",\n            \"price\": 500,\n            \"quantity\": 100,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T01:02:00.611414\",\n            \"updatedAt\": \"2026-01-08T01:02:00.611414\"\n        },\n        {\n            \"id\": 11,\n            \"name\": \"mobile\",\n            \"description\": \"iphone\",\n            \"price\": 1000.99,\n            \"quantity\": 100,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T01:01:08.806622\",\n            \"updatedAt\": \"2026-01-08T01:01:08.806622\"\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Laptop Stand\",\n            \"description\": \"Adjustable aluminum laptop stand\",\n            \"price\": 59.99,\n            \"quantity\": 90,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Desk Lamp\",\n            \"description\": \"LED desk lamp with adjustable brightness\",\n            \"price\": 39.99,\n            \"quantity\": 120,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"External SSD 1TB\",\n            \"description\": \"Portable SSD with USB 3.2 Gen 2\",\n            \"price\": 129.99,\n            \"quantity\": 100,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Noise Cancelling Headphones\",\n            \"description\": \"Premium wireless headphones with ANC\",\n            \"price\": 299.99,\n            \"quantity\": 60,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Webcam HD\",\n            \"description\": \"1080p HD webcam with built-in microphone\",\n            \"price\": 89.99,\n            \"quantity\": 80,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"USB-C Hub\",\n            \"description\": \"Multi-port USB-C hub with HDMI and SD card reader\",\n            \"price\": 79.99,\n            \"quantity\": 150,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"4K Monitor\",\n            \"description\": \"27-inch 4K UHD monitor with HDR support\",\n            \"price\": 599.99,\n            \"quantity\": 30,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Mechanical Keyboard\",\n            \"description\": \"RGB mechanical keyboard with Cherry MX switches\",\n            \"price\": 149.99,\n            \"quantity\": 100,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Wireless Mouse\",\n            \"description\": \"Ergonomic wireless mouse with long battery life\",\n            \"price\": 49.99,\n            \"quantity\": 200,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T00:45:44.314517\"\n        },\n        {\n            \"id\": 1,\n            \"name\": \"Gaming Mouse Pro\",\n            \"description\": \"Updated high-precision gaming mouse with RGB lighting\",\n            \"price\": 89.99,\n            \"quantity\": 150,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T00:45:44.314517\",\n            \"updatedAt\": \"2026-01-08T01:02:10.24941\"\n        }\n    ],\n    \"page\": 0,\n    \"size\": 15,\n    \"totalElements\": 12,\n    \"totalPages\": 1,\n    \"first\": true,\n    \"last\": true,\n    \"hasNext\": false,\n    \"hasPrevious\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Product by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"1"
+							]
+						},
+						"description": "Get a single product by its ID."
+					},
+					"response": [
+						{
+							"name": "Get Product by ID",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products/12",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"12"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Wed, 07 Jan 2026 19:35:25 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 12,\n    \"name\": \"mobile-samsung\",\n    \"description\": \"samsung\",\n    \"price\": 500,\n    \"quantity\": 100,\n    \"available\": true,\n    \"createdAt\": \"2026-01-08T01:02:00.611414\",\n    \"updatedAt\": \"2026-01-08T01:02:00.611414\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Search Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/search?name=laptop&minPrice=100&maxPrice=2000&inStock=true&page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"search"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "laptop",
+									"description": "Product name (partial match)"
+								},
+								{
+									"key": "minPrice",
+									"value": "100",
+									"description": "Minimum price"
+								},
+								{
+									"key": "maxPrice",
+									"value": "2000",
+									"description": "Maximum price"
+								},
+								{
+									"key": "inStock",
+									"value": "true",
+									"description": "Filter by availability"
+								},
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Search products by name, price range, and availability."
+					},
+					"response": [
+						{
+							"name": "Search Products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products/search?name=laptop&minPrice=100&maxPrice=2000&inStock=true&page=0&size=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"search"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "laptop",
+											"description": "Product name (partial match)"
+										},
+										{
+											"key": "minPrice",
+											"value": "100",
+											"description": "Minimum price"
+										},
+										{
+											"key": "maxPrice",
+											"value": "2000",
+											"description": "Maximum price"
+										},
+										{
+											"key": "inStock",
+											"value": "true",
+											"description": "Filter by availability"
+										},
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:18:40 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 1,\n            \"name\": \"Laptop Pro\",\n            \"description\": \"High-performance laptop for professionals\",\n            \"price\": 1299.99,\n            \"quantity\": 50,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        }\n    ],\n    \"page\": 0,\n    \"size\": 10,\n    \"totalElements\": 1,\n    \"totalPages\": 1,\n    \"first\": true,\n    \"last\": true,\n    \"hasNext\": false,\n    \"hasPrevious\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Available Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/available?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"available"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get all products that are currently in stock."
+					},
+					"response": [
+						{
+							"name": "Get Available Products",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products/available?page=0&size=10",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"available"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:19:08 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"content\": [\n        {\n            \"id\": 1,\n            \"name\": \"Laptop Pro\",\n            \"description\": \"High-performance laptop for professionals\",\n            \"price\": 1299.99,\n            \"quantity\": 50,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 2,\n            \"name\": \"Wireless Mouse\",\n            \"description\": \"Ergonomic wireless mouse with long battery life\",\n            \"price\": 49.99,\n            \"quantity\": 200,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 3,\n            \"name\": \"Mechanical Keyboard\",\n            \"description\": \"RGB mechanical keyboard with Cherry MX switches\",\n            \"price\": 149.99,\n            \"quantity\": 100,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 4,\n            \"name\": \"4K Monitor\",\n            \"description\": \"27-inch 4K UHD monitor with HDR support\",\n            \"price\": 599.99,\n            \"quantity\": 30,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 5,\n            \"name\": \"USB-C Hub\",\n            \"description\": \"Multi-port USB-C hub with HDMI and SD card reader\",\n            \"price\": 79.99,\n            \"quantity\": 150,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 6,\n            \"name\": \"Webcam HD\",\n            \"description\": \"1080p HD webcam with built-in microphone\",\n            \"price\": 89.99,\n            \"quantity\": 80,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 7,\n            \"name\": \"Noise Cancelling Headphones\",\n            \"description\": \"Premium wireless headphones with ANC\",\n            \"price\": 299.99,\n            \"quantity\": 60,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 8,\n            \"name\": \"External SSD 1TB\",\n            \"description\": \"Portable SSD with USB 3.2 Gen 2\",\n            \"price\": 129.99,\n            \"quantity\": 100,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 9,\n            \"name\": \"Desk Lamp\",\n            \"description\": \"LED desk lamp with adjustable brightness\",\n            \"price\": 39.99,\n            \"quantity\": 120,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        },\n        {\n            \"id\": 10,\n            \"name\": \"Laptop Stand\",\n            \"description\": \"Adjustable aluminum laptop stand\",\n            \"price\": 59.99,\n            \"quantity\": 90,\n            \"available\": true,\n            \"createdAt\": \"2026-01-08T10:31:55.95274\",\n            \"updatedAt\": \"2026-01-08T10:31:55.95274\"\n        }\n    ],\n    \"page\": 0,\n    \"size\": 10,\n    \"totalElements\": 10,\n    \"totalPages\": 1,\n    \"first\": true,\n    \"last\": true,\n    \"hasNext\": false,\n    \"hasPrevious\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Product (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Mobile-Samsung\",\n  \"description\": \"Mobile-Samsung\",\n  \"price\": 1000.99,\n  \"quantity\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products"
+							]
+						},
+						"description": "Create a new product. **Requires ADMIN role.**"
+					},
+					"response": [
+						{
+							"name": "Create Product (Admin)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Mobile-Samsung\",\n  \"description\": \"Mobile-Samsung\",\n  \"price\": 1000.99,\n  \"quantity\": 10\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/products",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:21:20 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 11,\n    \"name\": \"Mobile-Samsung\",\n    \"description\": \"Mobile-Samsung\",\n    \"price\": 1000.99,\n    \"quantity\": 10,\n    \"available\": true,\n    \"createdAt\": \"2026-01-08T10:51:20.170115\",\n    \"updatedAt\": \"2026-01-08T10:51:20.170115\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Product (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Mobile-Samsung\",\n  \"description\": \"Updated high-precision Mobile-Samsung with new quantity\",\n  \"price\": 1000.99,\n  \"quantity\": 10\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/products/11",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11"
+							]
+						},
+						"description": "Update an existing product. **Requires ADMIN role.**"
+					},
+					"response": [
+						{
+							"name": "Update Product (Admin)",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Mobile-Samsung\",\n  \"description\": \"Updated high-precision Mobile-Samsung with new quantity\",\n  \"price\": 1000.99,\n  \"quantity\": 10\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/products/11",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"11"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:27:53 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 11,\n    \"name\": \"Mobile-Samsung\",\n    \"description\": \"Updated high-precision Mobile-Samsung with new quantity\",\n    \"price\": 1000.99,\n    \"quantity\": 10,\n    \"available\": true,\n    \"createdAt\": \"2026-01-08T10:51:20.170115\",\n    \"updatedAt\": \"2026-01-08T10:51:20.170115\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"1"
+							]
+						},
+						"description": "Soft delete a product (sets deleted flag). **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Restore Product (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/products/11/restore",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"products",
+								"11",
+								"restore"
+							]
+						},
+						"description": "Restore a soft-deleted product. **Requires ADMIN role.**"
+					},
+					"response": [
+						{
+							"name": "Restore Product (Admin)",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/products/11/restore",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"products",
+										"11",
+										"restore"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:30:56 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 11,\n    \"name\": \"Mobile-Samsung\",\n    \"description\": \"Updated high-precision Mobile-Samsung with new quantity\",\n    \"price\": 1000.99,\n    \"quantity\": 10,\n    \"available\": true,\n    \"createdAt\": \"2026-01-08T10:51:20.170115\",\n    \"updatedAt\": \"2026-01-08T10:58:25.840829\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Product management endpoints"
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"productId\": 11,\n      \"quantity\": 5\n    },\n    {\n      \"productId\": 2,\n      \"quantity\": 3\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Place a new order. Validates stock availability and applies discounts based on user type and order amount.\n\n**Discount Rules:**\n- PREMIUM_USER: 10% off\n- Orders > $500: Extra 5% off"
+					},
+					"response": [
+						{
+							"name": "Create Order",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"productId\": 11,\n      \"quantity\": 5\n    },\n    {\n      \"productId\": 2,\n      \"quantity\": 3\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/orders",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"orders"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:32:26 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"userId\": 5,\n    \"username\": \"sulemanadmin\",\n    \"orderTotal\": 5154.92,\n    \"discountApplied\": 257.75,\n    \"finalTotal\": 4897.17,\n    \"status\": \"CONFIRMED\",\n    \"items\": [\n        {\n            \"id\": 1,\n            \"productId\": 2,\n            \"productName\": \"Wireless Mouse\",\n            \"quantity\": 3,\n            \"unitPrice\": 49.99,\n            \"discountApplied\": 0,\n            \"totalPrice\": 149.97\n        },\n        {\n            \"id\": 2,\n            \"productId\": 11,\n            \"productName\": \"Mobile-Samsung\",\n            \"quantity\": 5,\n            \"unitPrice\": 1000.99,\n            \"discountApplied\": 0,\n            \"totalPrice\": 5004.95\n        }\n    ],\n    \"discountBreakdown\": {\n        \"userTypeDiscount\": 0,\n        \"orderAmountDiscount\": 257.75,\n        \"totalDiscount\": 257.75,\n        \"userTypeDiscountReason\": \"No discount applicable\",\n        \"orderAmountDiscountReason\": \"Order amount over $500.00: 5% extra discount\"\n    },\n    \"createdAt\": \"2026-01-08T11:02:26.108997\",\n    \"updatedAt\": \"2026-01-08T11:02:26.108997\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Create Large Order (>$500 for extra discount)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"productId\": 11,\n      \"quantity\": 5\n    },\n    {\n      \"productId\": 1,\n      \"quantity\": 5\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							]
+						},
+						"description": "Create an order over $500 to test the extra 5% discount."
+					},
+					"response": []
+				},
+				{
+					"name": "Preview Discount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"productId\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"productId\": 4,\n      \"quantity\": 1\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/preview-discount",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"preview-discount"
+							]
+						},
+						"description": "Preview discount calculation without creating an order. Shows breakdown of user type and order amount discounts."
+					},
+					"response": [
+						{
+							"name": "Preview Discount",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"items\": [\n    {\n      \"productId\": 11,\n      \"quantity\": 5\n    },\n    {\n      \"productId\": 4,\n      \"quantity\": 1\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/orders/preview-discount",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"orders",
+										"preview-discount"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:35:01 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"originalTotal\": 5604.94,\n    \"userTypeDiscount\": 0,\n    \"orderAmountDiscount\": 280.25,\n    \"totalDiscount\": 280.25,\n    \"finalTotal\": 5324.69,\n    \"userTypeDiscountReason\": \"No discount applicable\",\n    \"orderAmountDiscountReason\": \"Order amount over $500.00: 5% extra discount\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Order by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1"
+							]
+						},
+						"description": "Get order details. Users can only view their own orders; admins can view any order."
+					},
+					"response": []
+				},
+				{
+					"name": "Get My Orders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/my-orders?page=0&size=10&sortBy=createdAt&sortDir=desc",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"my-orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								},
+								{
+									"key": "sortBy",
+									"value": "createdAt"
+								},
+								{
+									"key": "sortDir",
+									"value": "desc"
+								}
+							]
+						},
+						"description": "Get current user's orders with pagination."
+					},
+					"response": []
+				},
+				{
+					"name": "Get All Orders (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get all orders. **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders by User (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/user/1?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"user",
+								"1"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get all orders for a specific user. **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Orders by Status (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/status/CONFIRMED?page=0&size=10",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"status",
+								"CONFIRMED"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "0"
+								},
+								{
+									"key": "size",
+									"value": "10"
+								}
+							]
+						},
+						"description": "Get orders by status: PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED. **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Order Status (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/1/status?status=PROCESSING",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"status"
+							],
+							"query": [
+								{
+									"key": "status",
+									"value": "PROCESSING",
+									"description": "New status: CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED"
+								}
+							]
+						},
+						"description": "Update order status. Valid transitions: PENDING→CONFIRMED→PROCESSING→SHIPPED→DELIVERED. **Requires ADMIN role.**"
+					},
+					"response": [
+						{
+							"name": "Update Order Status (Admin)",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/orders/1/status?status=PROCESSING",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"orders",
+										"1",
+										"status"
+									],
+									"query": [
+										{
+											"key": "status",
+											"value": "PROCESSING",
+											"description": "New status: CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:36:09 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 1,\n    \"userId\": 5,\n    \"username\": \"sulemanadmin\",\n    \"orderTotal\": 5154.92,\n    \"discountApplied\": 257.75,\n    \"finalTotal\": 4897.17,\n    \"status\": \"PROCESSING\",\n    \"items\": [\n        {\n            \"id\": 1,\n            \"productId\": 2,\n            \"productName\": \"Wireless Mouse\",\n            \"quantity\": 3,\n            \"unitPrice\": 49.99,\n            \"discountApplied\": 0,\n            \"totalPrice\": 149.97\n        },\n        {\n            \"id\": 2,\n            \"productId\": 11,\n            \"productName\": \"Mobile-Samsung\",\n            \"quantity\": 5,\n            \"unitPrice\": 1000.99,\n            \"discountApplied\": 0,\n            \"totalPrice\": 5004.95\n        }\n    ],\n    \"discountBreakdown\": null,\n    \"createdAt\": \"2026-01-08T11:02:26.108997\",\n    \"updatedAt\": \"2026-01-08T11:02:26.108997\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Cancel Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/orders/1/cancel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"orders",
+								"1",
+								"cancel"
+							]
+						},
+						"description": "Cancel an order. Only PENDING or CONFIRMED orders can be cancelled. Stock is restored on cancellation."
+					},
+					"response": []
+				}
+			],
+			"description": "Order management endpoints"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get Current User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/me",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"me"
+							]
+						},
+						"description": "Get details of currently authenticated user."
+					},
+					"response": [
+						{
+							"name": "Get Current User",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/users/me",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"users",
+										"me"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:36:59 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"id\": 5,\n    \"username\": \"sulemanadmin\",\n    \"email\": \"sulemanadmin@test.com\",\n    \"firstName\": \"sulemanadmin\",\n    \"lastName\": \"sulemanadmin\",\n    \"role\": \"ADMIN\",\n    \"enabled\": true,\n    \"createdAt\": \"2026-01-08T10:40:36.201774\",\n    \"updatedAt\": \"2026-01-08T10:40:36.201774\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get All Users (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Get list of all users. **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID (Admin)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/1",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						},
+						"description": "Get user by ID. **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Role (Admin)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/2/role?role=PREMIUM_USER",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"2",
+								"role"
+							],
+							"query": [
+								{
+									"key": "role",
+									"value": "PREMIUM_USER",
+									"description": "New role: USER, PREMIUM_USER, ADMIN"
+								}
+							]
+						},
+						"description": "Change a user's role. **Requires ADMIN role.**"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/users/2",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"2"
+							]
+						},
+						"description": "Disable a user account. **Requires ADMIN role.**"
+					},
+					"response": []
+				}
+			],
+			"description": "User management endpoints"
+		},
+		{
+			"name": "Actuator",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"health"
+							]
+						},
+						"description": "Application health status"
+					},
+					"response": [
+						{
+							"name": "Health Check",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actuator/health",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actuator",
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.spring-boot.actuator.v3+json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:37:54 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": \"UP\",\n    \"components\": {\n        \"db\": {\n            \"status\": \"UP\",\n            \"details\": {\n                \"database\": \"H2\",\n                \"validationQuery\": \"isValid()\"\n            }\n        },\n        \"diskSpace\": {\n            \"status\": \"UP\",\n            \"details\": {\n                \"total\": 254721126400,\n                \"free\": 8912801792,\n                \"threshold\": 10485760,\n                \"path\": \"C:\\\\workspace_bank-sa\\\\.\",\n                \"exists\": true\n            }\n        },\n        \"ping\": {\n            \"status\": \"UP\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Application Info",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/actuator/info",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"actuator",
+								"info"
+							]
+						},
+						"description": "Application information"
+					},
+					"response": [
+						{
+							"name": "Application Info",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/actuator/info",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"actuator",
+										"info"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": null,
+							"header": [
+								{
+									"key": "Vary",
+									"value": "Origin"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Method"
+								},
+								{
+									"key": "Vary",
+									"value": "Access-Control-Request-Headers"
+								},
+								{
+									"key": "X-Content-Type-Options",
+									"value": "nosniff"
+								},
+								{
+									"key": "X-XSS-Protection",
+									"value": "0"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-cache, no-store, max-age=0, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Expires",
+									"value": "0"
+								},
+								{
+									"key": "X-Frame-Options",
+									"value": "SAMEORIGIN"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/vnd.spring-boot.actuator.v3+json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Date",
+									"value": "Thu, 08 Jan 2026 05:38:38 GMT"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=60"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"app\": {\n        \"name\": \"Product Manager API\",\n        \"description\": \"Spring Boot application for managing products, users, and orders\",\n        \"version\": \"1.0.0\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Spring Actuator monitoring endpoints"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
